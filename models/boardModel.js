@@ -18,6 +18,7 @@ const boardSchema = new mongoose.Schema({
     creator: {
       type: String,
       default: 'active',
+      required: true
     }
   });
 

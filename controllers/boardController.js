@@ -1,4 +1,4 @@
-const User = require('../models/userModel');
+const board = require('../models/boardModel');
 
 exports.createBoard = async (req, res) => {
   try {
@@ -18,7 +18,7 @@ exports.createBoard = async (req, res) => {
     // Return the board ID to the client
     res.status(201).json({ message: 'Board created successfully', boardId: newBoard._id });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to create board' });
+    res.status(500).json({ error: 'Failed to create board: error ' + error });
   }
 };
 
