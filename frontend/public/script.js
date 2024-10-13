@@ -204,7 +204,7 @@ const keysPressed = {
   d: false,
 };
 const PAN_SPEED = 20; // Pixels per frame
-let ulsrc = "/users/" + GLOBAL_BOARD_ID + "/";
+// let ulsrc = "/users/" + GLOBAL_BOARD_ID + "/";
 let PIXEL_VAL = 10; // remaining pixels that can be placed.
 const CREATE_BOARD = document.getElementById("create");
 console.log("HELPPPPPPPPPPPPPP!!!!")
