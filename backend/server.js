@@ -42,7 +42,7 @@ io.on('connection', async (socket) => {
 
 const uri = "mongodb+srv://pixelperfect:5k1b1d1Chungu5%21@cluster0.3jg7z.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 // ango
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })z
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error(err));
 
