@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const GLOBAL_ROOM = "670b583bacdb17a8c5c211af";
 
 const userSchema = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
     required: true,
   },
 
-  email: {
+  password: {
     type: String,
     required: true,
     unique: true,

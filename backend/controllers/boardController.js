@@ -51,15 +51,6 @@ exports.handleDisconnection = (socket) => {
 
 exports.createBoard = async (req, res) => {
   try {
-    // const userId = req.userId;
-    // const newBoard = new Board(
-    //   {
-    //     creator: userId,
-    //     status: "active",
-    //     createdAt: new Date()
-    //   } 
-    // );
-
     const newBoard = new Board();
 
     await newBoard.save(); 
