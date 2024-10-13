@@ -1,6 +1,7 @@
 // public/script.js
-
-const socket = io('http://localhost:3001'); // Connect to the backend server
+const socket = io('http://localhost:3001' ); // Connect to the backend server
+let GLOBAL_BOARD_ID;
+console.log('io is', io);
 
 const canvas = document.getElementById('pixelCanvas');
 const ctx = canvas.getContext('2d');
@@ -33,8 +34,9 @@ for (let y = 0; y < GRID_SIZE; y++) {
 // Current selected color in HSV
 let currentColorHSV = { h: 0, s: 1, v: 1 };
 
-socket.on('initialBoard', (data) => {
+socket.on('gameBoard', (data, id) => {
   pixels = data;
+  GLOBAL_BOARD_ID = id;
   draw();
 });
 
@@ -229,7 +231,7 @@ function onClick(event) {
       currentColorHSV.s,
       currentColorHSV.v
     );
-    socket.emit('updatePixel', { x: gridX, y: gridY, color: hsvToHex(
+    socket.emit('updatePixel', {boardId: GLOBAL_BOARD_ID, x: gridX, y: gridY, color: hsvToHex(
       currentColorHSV.h,
       currentColorHSV.s,
       currentColorHSV.v
