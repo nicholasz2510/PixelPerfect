@@ -45,13 +45,18 @@ body {
   }
 
   #gallery {
-    height: calc(100% - 200px);
+    height: calc(100% - 280px);
     overflow: scroll;
   }
 
   .galleryItem {
+    display: flex;
+    align-items: center;
+  }
+
+  .galleryItem p {
     height:40px;
-    width: parent;
+    width: 180px;
     padding:10px 20px;
     margin: 10px;
     border-radius: 10px;
@@ -61,9 +66,35 @@ body {
     font-size: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     background-color: #eeeeee;
+    justify-content: space-between;
+  }
+  
+  /* Tooltip text */
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: black;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+   
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 111;
+  }
+  
+  /* Show the tooltip text when you mouse over the tooltip container */
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
+  .icon-share {
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
   }
 
-  .galleryItem:hover {
+  .galleryItem p:hover {
     background-color: #dddddd;
     cursor: pointer;
   }

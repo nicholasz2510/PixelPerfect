@@ -82,7 +82,7 @@ async function handleAuthentication() {
               console.log(response);
               for (let i = 0; i < response.rooms.length; i++) {
                 usersBoards[response.rooms[i]] = response.titles[i];
-                addGalleryItem(response.titles[i]);
+                addGalleryItem(response.titles[i], response.rooms[i]);
               }
             }
 
@@ -97,7 +97,7 @@ async function handleAuthentication() {
     }
 }
 
-function addGalleryItem(title) {
+function addGalleryItem(title, id) {
   // Create a new div element for the gallery item
   const newGalleryItem = document.createElement('div');
   newGalleryItem.classList.add('galleryItem'); // Add a class if needed for styling
@@ -105,15 +105,37 @@ function addGalleryItem(title) {
   // Create a new p element for the title
   const titleElement = document.createElement('p');
   titleElement.innerText = title;
+// Create the share icon using an <img> element
+const shareIcon = document.createElement('img');
+shareIcon.classList.add('icon', 'icon-share', 'tooltip'); // Add classes for styling
+shareIcon.setAttribute('src', 'share.png'); // Path to your share.png file
+shareIcon.setAttribute('alt', 'Share'); // Accessibility attribute
+shareIcon.setAttribute('aria-label', 'Share'); // Accessibility label
+shareIcon.setAttribute('role', 'button'); // Accessibility role
+shareIcon.tabIndex = 0; // Make it focusable for keyboard users
+shareIcon.setAttribute('title', 'Copy join code'); // Tooltip text
+
+const tooltip = document.createElement('span');
+tooltip.classList.add('tooltiptext'); // Add a class for styling
+tooltip.innerText = 'Copy join code'; // Tooltip text
+
+shareIcon.appendChild(tooltip); // Append the tooltip to the share icon
+
+// Optionally, add a click event to the share icon
+shareIcon.addEventListener('click', async () => {
+  await navigator.clipboard.writeText(id);
+});
 
   // Append the p element (title) to the new gallery item div
   newGalleryItem.appendChild(titleElement);
+
+  newGalleryItem.appendChild(shareIcon);
 
   // Append the new gallery item to the #gallery div
   const gallery = document.getElementById('gallery');
   gallery.appendChild(newGalleryItem);
 
-  newGalleryItem.addEventListener('click', async () => {
+  titleElement.addEventListener('click', async () => {
     console.log("clicked on " + title);
     currentBoardId = Object.keys(usersBoards).find(key => usersBoards[key] === title);
     console.log("clicked on " + currentBoardId);
@@ -289,7 +311,7 @@ function createNewBoard() {
         body: JSON.stringify({ boardId: response1.boardId , userId}),
     });
     usersBoards[response1.boardId] = boardTitle;
-    addGalleryItem(boardTitle);
+    addGalleryItem(boardTitle, response1.boardId);
     document.getElementById("formWrapper").classList.add("hidden");
     document.getElementById("createForm").classList.remove("boardForm");
     document.getElementById("createForm").classList.add("hidden");
@@ -317,7 +339,7 @@ function joinNewBoard() {
     requestJson = await request.json();
     if (request.status === 201) {
       usersBoards[boardId] = requestJson.board.title;
-      addGalleryItem(boardTitle);
+      addGalleryItem(boardTitle, boardId);
     } else {
       // TODO display error message (invalid join code)
     }
