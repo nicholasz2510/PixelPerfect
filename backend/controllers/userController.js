@@ -81,8 +81,13 @@ exports.authUser = async (req, res) => {
         await user.save();
     }
     
+    const titles = [];
+    for(let i = 0; i < user.rooms.length; i++) {
+      titles.push((await Board.findById(user.rooms[i])).title);
+    }
   
     res.status(201).json({
+      titles,
       rooms : user.rooms,
       pixels : user.pixels
     });
