@@ -346,7 +346,13 @@ for (let i = 0; i < cross.length; i++) {
   cross[i].addEventListener("click", doTaskCross);
 }
 
-async function doTaskComplete(event) {
+let teethCheck = document.getElementById("teethCheck");
+teethCheck.addEventListener("click", () => {PIXEL_VAL += 2; document.getElementById("pixel-val").textContent = "" + PIXEL_VAL; draw()});
+
+let gymCheck = document.getElementById("gymCheck");
+gymCheck.addEventListener("click", () => {PIXEL_VAL += 8; document.getElementById("pixel-val").textContent = "" + PIXEL_VAL; draw()});
+
+function doTaskComplete(event) {
   console.log(event);
   console.log(event.currentTarget);
 }
