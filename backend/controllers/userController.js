@@ -9,16 +9,6 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-exports.createUser = async (req, res) => {
-  try {
-    const newUser = new User(req.body);
-    await newUser.save();
-    res.status(201).json(newUser);
-  } catch (error) {
-    res.status(400).json({ error: 'Bad request' });
-  }
-};
-
 exports.addRoom = async (req, res) => {
   try {
     const currUser = User.findById(req.params.userId);
@@ -46,11 +36,13 @@ exports.getAllRooms = async (req, res) => {
 exports.createUser = async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
+  const _id = req.body._id;
 
   try {
     const user = new User({
       username: username,
       password: password, 
+      _id: id
     });
   
     // Save the user to the database
