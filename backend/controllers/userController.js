@@ -78,12 +78,11 @@ exports.authUser = async (req, res) => {
           _id: _id
         });
       
-        // Save the user to the database
         await user.save();
     }
     
   
-    res.status(201).send({
+    res.status(201).json({
       message : "User created successfully.",
       rooms : user.rooms,
       pixels : user.pixels
