@@ -21,14 +21,14 @@ const GRID_SIZE = 100;
 const BASE_PIXEL_SIZE = Math.min(width, height) / GRID_SIZE; // Base pixel size without scaling
 
 // // Initialize pixel grid with white color
-// let pixels = [];
-// for (let y = 0; y < GRID_SIZE; y++) {
-//   const row = [];
-//   for (let x = 0; x < GRID_SIZE; x++) {
-//     row.push('#FFFFFF');
-//   }
-//   pixels.push(row);
-// }
+let pixels = [];
+for (let y = 0; y < GRID_SIZE; y++) {
+  const row = [];
+  for (let x = 0; x < GRID_SIZE; x++) {
+    row.push('#FFFFFF');
+  }
+  pixels.push(row);
+}
 
 // Current selected color in HSV
 let currentColorHSV = { h: 0, s: 1, v: 1 };
@@ -229,7 +229,11 @@ function onClick(event) {
       currentColorHSV.s,
       currentColorHSV.v
     );
-    socket.emit('updatePixel', { x: gridX, y: gridY, color: newColor }); // Send pixel update to the server
+    socket.emit('updatePixel', { x: gridX, y: gridY, color: hsvToHex(
+      currentColorHSV.h,
+      currentColorHSV.s,
+      currentColorHSV.v
+    ) }); // Send pixel update to the server
     draw();
     console.log(pixels[gridY][gridX] + " added at (" + gridX + ", " + gridY + ")");
   }

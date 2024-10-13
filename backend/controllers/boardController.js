@@ -4,6 +4,7 @@ let pixelBoard = Array(100).fill().map(() => Array(100).fill("#FFFFFF"));
 
 exports.handlePixelUpdate = (socket, io) => {
   socket.on('updatePixel', async ({ x, y, color }) => {
+    console.log('updatePixel', x, y, color);
     try {
       pixelBoard[y][x] = color;
       io.emit('pixelUpdated', { x, y, color });
@@ -19,7 +20,7 @@ exports.handleNewConnection = (socket) => {
   console.log('board connected');
 };
 
-xports.handleDisconnection = (socket) => {
+exports.handleDisconnection = (socket) => {
   socket.on('disconnect', () => {
     console.log('board died');
   });

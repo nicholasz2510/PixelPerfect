@@ -1,20 +1,27 @@
-// require statements and imports
 const express = require('express');
 const http = require('http');
-const socketIo = require('socket.io');
 const boardController = require('./controllers/boardController');
+const { Server } = require('socket.io');
+const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const server = http.createServer(app);
-const io = new Server(server);
-
+const io = new Server(server, {
+  cors: {
+    origin: ['http://localhost:3000', 'http://localhost:3002'], // Allow requests from the frontend
+    methods: ['GET', 'POST'],
+  },
+});
 
 // json
 app.use(express.json());
+app.use(cors());
 app.use(express.static('public'));
 
 io.on('connection', (socket) => {
+  console.log('A user connected');
+
   // board connections
   boardController.handleNewConnection(socket);
   boardController.handlePixelUpdate(socket, io);
@@ -32,6 +39,6 @@ io.on('connection', (socket) => {
 // app.use('/api/boards', boardRoutes);
 
 // Start the server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
