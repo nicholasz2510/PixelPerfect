@@ -129,7 +129,7 @@ body {
     bottom: 20px;
     left: 320px;
     /* transform: translateY(-50%); */
-    width: 180px;
+    width: 300px;
     background-color: #ffffff;
     padding: 10px;
     border-radius: 10px;
@@ -185,12 +185,13 @@ body {
   }
 
   #addTaskButtonWrapper #taskInput {
-    width: 120px;
+    width: 240px;
     height: 20px;
     border-radius: 5px;
     border: 1px solid #b0b0b0;
     padding: 5px;
     margin-right: 5px;
+    margin-left: 5px;
   }
   
   /* Preset Colors */
