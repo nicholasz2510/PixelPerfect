@@ -49,8 +49,8 @@
   <div id="taskListPanel">
     <div id="taskList">
       <!-- Task items will be added here -->
-       <div id="taskItem">
-        <p>Take a shower (8)</p>
+       <div id="taskItem1" class="taskItem">
+        <p>Brush teeth at night (<span id="value1">2</span>)</p>
         <div class="icon-container">
         <svg class="icon icon-checkbox" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <polyline points="6 12 10 16 18 8" class="checkbox-tick" style="fill:none;stroke-width:2" />
@@ -62,8 +62,8 @@
         </div>
 
        </div>
-       <div id="taskItem">
-        <p>Run washing machine (3)</p>
+       <div id="taskItem2" class="taskItem">
+        <p>Go to the gym (<span id="value2">8</span>)</p>
         <div class="icon-container">
         <svg class="icon icon-checkbox" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <polyline points="6 12 10 16 18 8" class="checkbox-tick" style="fill:none;stroke-width:2" />
@@ -76,7 +76,7 @@
        </div>
     </div>
     <div id="addTaskButtonWrapper">
-        <input type="text" id="taskInput" placeholder="Enter task" class="textbox"><div class="icon-container"><svg class="icon icon-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <input type="text" id="taskInput" placeholder="Enter task"> <input type="number" id="taskValue" placeholder="px."> <div class="icon-container"><svg id="new-task" class="icon icon-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <!-- Vertical line -->
         <line x1="12" y1="4" x2="12" y2="20" />
         <!-- Horizontal line -->

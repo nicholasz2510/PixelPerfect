@@ -204,6 +204,7 @@ const keysPressed = {
   d: false,
 };
 const PAN_SPEED = 20; // Pixels per frame
+let ulsrc = "/users/" + GLOBAL_BOARD_ID + "/";
 let PIXEL_VAL = 10; // remaining pixels that can be placed.
 const CREATE_BOARD = document.getElementById("create");
 console.log("HELPPPPPPPPPPPPPP!!!!")
@@ -263,6 +264,72 @@ draw();
 
 CREATE_BOARD.addEventListener("click", createNewBoard);
 JOIN_BOARD.addEventListener("click", joinNewBoard);
+let newTask = document.getElementById("new-task");
+newTask.addEventListener("click", createNewTask);
+
+function createNewTask() {
+  console.log("entering");
+  // Get input values for the task name and task value
+  let taskName = document.getElementById("taskInput").value;
+  let taskValue = document.getElementById("taskValue").value;
+
+  // Create a new taskItem div
+  let newTaskItem = document.createElement("div");
+  newTaskItem.classList.add("taskItem");
+
+  // Set a dynamic id based on the current number of tasks
+  let taskCount = document.getElementsByClassName("taskItem").length + 1;
+  newTaskItem.id = `taskItem${taskCount}`;
+
+  // Create the task text with a span for the task value
+  let taskText = document.createElement("p");
+  taskText.innerHTML = `${taskName} (<span id="value${taskCount}">${taskValue}</span>)`;
+
+  // Create the icon container div
+  let iconContainer = document.createElement("div");
+  iconContainer.classList.add("icon-container");
+
+  // Create the checkbox icon SVG
+  let checkboxIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  checkboxIcon.classList.add("icon", "icon-checkbox");
+  checkboxIcon.setAttribute("viewBox", "0 0 24 24");
+  let checkboxPolyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+  checkboxPolyline.setAttribute("points", "6 12 10 16 18 8");
+  checkboxPolyline.setAttribute("style", "fill:none;stroke-width:2");
+  checkboxIcon.appendChild(checkboxPolyline);
+
+  // Create the X icon SVG
+  let xIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  xIcon.classList.add("icon", "icon-x");
+  xIcon.setAttribute("viewBox", "0 0 24 24");
+  let xLine1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  xLine1.setAttribute("x1", "8");
+  xLine1.setAttribute("y1", "8");
+  xLine1.setAttribute("x2", "16");
+  xLine1.setAttribute("y2", "16");
+  let xLine2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  xLine2.setAttribute("x1", "16");
+  xLine2.setAttribute("y1", "8");
+  xLine2.setAttribute("x2", "8");
+  xLine2.setAttribute("y2", "16");
+  xIcon.appendChild(xLine1);
+  xIcon.appendChild(xLine2);
+
+  // Append the icons to the icon container
+  iconContainer.appendChild(checkboxIcon);
+  iconContainer.appendChild(xIcon);
+
+  // Append the task text and icon container to the new taskItem div
+  newTaskItem.appendChild(taskText);
+  newTaskItem.appendChild(iconContainer);
+
+  // Append the new taskItem to the taskList div
+  document.getElementById("taskList").appendChild(newTaskItem);
+
+  // Clear the input fields after adding the task
+  document.getElementById("taskInput").value = '';
+  document.getElementById("taskValue").value = '';
+}
 
 
 // checkbox
