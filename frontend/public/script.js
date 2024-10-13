@@ -25,6 +25,8 @@ const BASE_PIXEL_SIZE = Math.min(width, height) / GRID_SIZE; // Base pixel size 
 
 let usersBoards = {};
 
+let userId;
+
 let auth0Client;
 
 async function configureAuth0() {
@@ -62,6 +64,7 @@ async function handleAuthentication() {
             // Fetch and display the user's profile
             const user = await auth0Client.getUser();
             console.log('User profile:', user);
+            userId = user.sub;
 
             // const formData = new FormData();
             // formData.append('_id', user.sub);
@@ -76,6 +79,7 @@ async function handleAuthentication() {
               })
             if (response.ok) {
               response = await response.json();
+              console.log(response);
               for (let i = 0; i < response.rooms.length; i++) {
                 usersBoards[response.rooms[i]] = response.titles[i];
                 addGalleryItem(response.titles[i]);
@@ -253,18 +257,28 @@ function createNewBoard() {
   console.log(createForm)
   createForm.classList.remove("hidden");
   createForm.classList.add("boardForm");
-  createForm.addEventListener("submit", (event) => {
+  createForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     let boardTitle = document.querySelector("#createForm input").value;
     console.log(boardTitle);
 
-    fetch('http://localhost:3001/api/boards/', {
+    let response1 = await fetch('http://localhost:3001/api/boards/', {
       headers: {
           'Content-Type': 'application/json'  // Set content type to JSON
       },
         method: 'POST',
         body: JSON.stringify({ title: boardTitle }),
-    })
+    });
+    response1 = await response1.json();
+    let response2 = await fetch('http://localhost:3001/api/users/board/', {
+      headers: {
+          'Content-Type': 'application/json'  // Set content type to JSON
+      },
+        method: 'POST',
+        body: JSON.stringify({ boardId: response1.boardId , userId}),
+    });
+    usersBoards[response1.boardId] = boardTitle;
+    addGalleryItem(boardTitle);
     document.getElementById("formWrapper").classList.add("hidden");
     document.getElementById("createForm").classList.remove("boardForm");
     document.getElementById("createForm").classList.add("hidden");
@@ -277,18 +291,21 @@ function joinNewBoard() {
   console.log(joinForm)
   joinForm.classList.remove("hidden");
   joinForm.classList.add("boardForm");
-  joinForm.addEventListener("submit", (event) => {
+  joinForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     let boardId = document.querySelector("#joinForm input").value;
     console.log(boardId);
 
-    fetch('http://localhost:3001/api/users/', {
+    let request = await fetch('http://localhost:3001/api/users/board', {
       headers: {
           'Content-Type': 'application/json'  // Set content type to JSON
       },
         method: 'POST',
-        body: JSON.stringify({ boardId: boardId }),
+        body: JSON.stringify({ boardId, userId }),
     })
+    request = await request.json();
+    usersBoards[boardId] = request.board.title;
+    addGalleryItem(boardTitle);
     document.getElementById("formWrapper").classList.add("hidden");
     document.getElementById("joinForm").classList.remove("boardForm");
     document.getElementById("joinForm").classList.add("hidden");

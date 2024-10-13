@@ -13,11 +13,11 @@ exports.getAllUsers = async (req, res) => {
 exports.addRoom = async (req, res) => {
   try {
     const currUser = await User.findById(req.body.userId);
-    if(currUser) {
+    if(currUser && !currUser.rooms.includes(req.body.boardId)) {
       currUser.rooms.push(req.body.boardId);
       currUser.pixels.push(10);
       await currUser.save();
-      res.status(201).json(currUser.rooms); 
+      res.status(201).json({rooms: currUser.rooms, board: Board.findById(req.body.boardId)}); 
     }
   } catch (error) {
     res.status(400).json({ error: 'Bad request' });
