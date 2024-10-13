@@ -30,8 +30,9 @@ exports.handlePixelUpdate = (socket, io) => {
 exports.handleNewConnection = (socket) => {
   console.log("top of handle connection");
 
-  socket.on('roomJoin', (boardId) => {
-    const boardFound = Board.findById(boardId);
+  socket.on('roomJoin', async (boardId) => {
+    const boardFound = await Board.findById(boardId);
+    console.log(boardId);
     if(boardFound) {
 
       const rooms = [...socket.rooms]; // Get a copy of all rooms this socket has joined
@@ -43,8 +44,9 @@ exports.handleNewConnection = (socket) => {
       });
 
       socket.join(boardId);
+      console.log("ROOM IS NOT COOKED HOPEFULLY " + boardFound);
       socket.emit('gameBoard', boardFound.board, boardFound._id, boardFound.title);
-      socket.emit('joinSuccess', "Connected to room  " + boardId);
+      socket.emit('joinSuccess', boardId);
       console.log('Connected to room ' + boardId);
     } else {
       socket.emit('failureJoin', "failed to join room");

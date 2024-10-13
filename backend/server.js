@@ -33,6 +33,7 @@ io.on('connection', async (socket) => {
   
   socket.emit('gameBoard', initBoard.toObject().board, GLOBAL_ROOM, initBoard.title);
   console.log("GLOBAL ROOM: " + GLOBAL_ROOM);
+  console.log("INIT BOARD: " + initBoard);
   socket.join(GLOBAL_ROOM);
 
   boardController.handleNewConnection(socket);

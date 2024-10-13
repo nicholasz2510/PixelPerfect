@@ -1,6 +1,6 @@
 // public/script.js
 const socket = io('http://localhost:3001' ); // Connect to the backend server
-let GLOBAL_BOARD_ID;
+let currentBoardId;
 console.log('io is', io);
 
 const canvas = document.getElementById('pixelCanvas');
@@ -115,7 +115,9 @@ function addGalleryItem(title) {
 
   newGalleryItem.addEventListener('click', async () => {
     console.log("clicked on " + title);
-    socket.emit('roomJoin', Object.keys(usersBoards).find(key => usersBoards[key] === title));
+    currentBoardId = Object.keys(usersBoards).find(key => usersBoards[key] === title);
+    console.log("clicked on " + currentBoardId);
+    socket.emit('roomJoin', currentBoardId);
   });
 }
 
@@ -137,7 +139,7 @@ let currentColorHSV = { h: 0, s: 1, v: 1 };
 
 socket.on('gameBoard', (data, id, title) => {
   pixels = data;
-  GLOBAL_BOARD_ID = id;
+  currentBoardId = id;
   titleContainer.innerText = title;
   console.log(title);
   draw();
@@ -147,6 +149,10 @@ socket.on('pixelUpdated', ({ x, y, color }) => {
   pixels[y][x] = color; // Update the pixel color in the local array
   draw();
 });
+
+// socket.on('joinSuccess', (boardId) => {
+//   currentBoardId = boardId;
+// });
 
 // Transformation variables
 let scale = 1;
@@ -431,7 +437,7 @@ function onClick(event) {
       currentColorHSV.s,
       currentColorHSV.v
     );
-    socket.emit('updatePixel', {boardId: GLOBAL_BOARD_ID, x: gridX, y: gridY, color: hsvToHex(
+    socket.emit('updatePixel', {boardId: currentBoardId, x: gridX, y: gridY, color: hsvToHex(
       currentColorHSV.h,
       currentColorHSV.s,
       currentColorHSV.v
