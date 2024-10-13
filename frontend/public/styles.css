@@ -49,7 +49,7 @@ body {
     overflow: scroll;
   }
 
-  #galleryItem {
+  .galleryItem {
     height:40px;
     width: parent;
     padding:10px 20px;
@@ -63,7 +63,7 @@ body {
     background-color: #eeeeee;
   }
 
-  #galleryItem:hover {
+  .galleryItem:hover {
     background-color: #dddddd;
     cursor: pointer;
   }

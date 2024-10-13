@@ -23,6 +23,8 @@ canvas.height = height;
 const GRID_SIZE = 100;
 const BASE_PIXEL_SIZE = Math.min(width, height) / GRID_SIZE; // Base pixel size without scaling
 
+let usersBoards = {};
+
 let auth0Client;
 
 async function configureAuth0() {
@@ -64,7 +66,7 @@ async function handleAuthentication() {
             // const formData = new FormData();
             // formData.append('_id', user.sub);
             // Use fetch to send a POST request
-              fetch('http://localhost:3001/api/users/auth', {
+            let response = await fetch('http://localhost:3001/api/users/auth', {
                 headers: {
                     'Content-Type': 'application/json'  // Set content type to JSON
                 },
@@ -72,6 +74,13 @@ async function handleAuthentication() {
                   body: JSON.stringify({ _id: user.sub }),
           
               })
+            if (response.ok) {
+              response = await response.json();
+              for (let i = 0; i < response.rooms.length; i++) {
+                usersBoards[response.rooms[i]] = response.titles[i];
+                addGalleryItem(response.titles[i]);
+              }
+            }
 
         } else {
             console.log("User is not authenticated, redirecting to login...");
@@ -80,9 +89,25 @@ async function handleAuthentication() {
         }
     } catch (error) {
         console.error("Error during authentication:", error);
-        // dfidsfs();
         window.location.href = '/index.html';  // Redirect to login if there's an error
     }
+}
+
+function addGalleryItem(title) {
+  // Create a new div element for the gallery item
+  const newGalleryItem = document.createElement('div');
+  newGalleryItem.classList.add('galleryItem'); // Add a class if needed for styling
+
+  // Create a new p element for the title
+  const titleElement = document.createElement('p');
+  titleElement.innerText = title;
+
+  // Append the p element (title) to the new gallery item div
+  newGalleryItem.appendChild(titleElement);
+
+  // Append the new gallery item to the #gallery div
+  const gallery = document.getElementById('gallery');
+  gallery.appendChild(newGalleryItem);
 }
 
 // Initialize Auth0 and handle the session on page load
