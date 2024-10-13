@@ -406,7 +406,7 @@ function joinNewBoard() {
     requestJson = await request.json();
     if (request.status === 201) {
       usersBoards[boardId] = requestJson.board.title;
-      addGalleryItem(boardTitle, boardId);
+      addGalleryItem(usersBoards[boardId], boardId);
     } else {
       // TODO display error message (invalid join code)
     }
