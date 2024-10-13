@@ -1,4 +1,4 @@
-const board = require('../models/boardModel');
+const Board = require('../models/boardModel');
 
 exports.createBoard = async (req, res) => {
   try {
@@ -25,8 +25,11 @@ exports.createBoard = async (req, res) => {
 
 // controllers/boardController.js
 exports.updateBoard = async (req, res) => {
+  console.log(req.body);
   const { boardId } = req.params;
   const { board } = req.body; // The new state of the board (e.g., updated 2D array)
+
+  console.log(board);
 
   try {
     const updatedBoard = await Board.findByIdAndUpdate(
