@@ -24,7 +24,7 @@ const boardSchema = new mongoose.Schema({
 
     title: {
       type: String,
-      default: 'untitled',
+      default: 'untitled board',
       required: true
     },
 
