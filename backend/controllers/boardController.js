@@ -32,6 +32,16 @@ exports.handleNewConnection = (socket) => {
   socket.on('roomJoin', (boardId) => {
     const boardFound = Board.findById(boardId);
     if(boardFound) {
+
+      const rooms = [...socket.rooms]; // Get a copy of all rooms this socket has joined
+      rooms.forEach((room) => {
+          if (room !== boardId) { // Don't remove the socket from its own room (default room)
+              socket.leave(room);
+              console.log(`Socket removed from room: ${room}`);
+          }
+      });
+
+
       socket.join(boardId);
       socket.emit('gameBoard', boardFound.board);
       socket.emit('joinSuccess', "Connected to room  " + boardId);
