@@ -8,6 +8,6 @@ router.post('/auth/', userController.authUser);
 router.post('/board', userController.addRoom);
 router.post('/board/pixels', userController.setPixels);
 router.get('/:userId/boards', userController.getAllRooms);
-router.get('/:userId/:boardId/', getPixels)
+router.get('/:userId/:boardId/', userController.getPixels)
 
 module.exports = router;

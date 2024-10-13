@@ -40,9 +40,9 @@ io.on('connection', async (socket) => {
   boardController.handleDisconnection(socket);
 });
 
-
+const uri = "mongodb+srv://pixelperfect:5k1b1d1Chungu5%21@cluster0.3jg7z.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 // ango
-mongoose.connect('mongodb://localhost:27017/testDb', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error(err));
 
