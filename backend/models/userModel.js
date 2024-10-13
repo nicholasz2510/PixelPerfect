@@ -11,6 +11,12 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: () => [GLOBAL_ROOM]
   },
+  
+  pixels: {
+    type: [Number],
+    required: true,
+    default: () => [10]
+  },
 });
 
 module.exports = mongoose.model('User', userSchema);
