@@ -18,7 +18,13 @@ const boardSchema = new mongoose.Schema({
    
     creator: {
       type: String,
-      default: 'active',
+      default: 'sbkiditi',
+      required: true
+    },
+
+    title: {
+      type: String,
+      default: 'untitled',
       required: true
     },
 

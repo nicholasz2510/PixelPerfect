@@ -7,11 +7,13 @@ const canvas = document.getElementById('pixelCanvas');
 const ctx = canvas.getContext('2d');
 const colorPickerPanel = document.getElementById('colorPickerPanel');
 const presetColorsContainer = document.getElementById('presetColors');
+const titleContainer = document.getElementById('boardTitle');
 const hueSlider = document.getElementById('hueSlider');
 const saturationSlider = document.getElementById('saturationSlider');
 const valueSlider = document.getElementById('valueSlider');
 
-let width = window.innerWidth;
+const SIDEBAR_WIDTH = 300;
+let width = window.innerWidth - SIDEBAR_WIDTH;
 let height = window.innerHeight;
 
 canvas.width = width;
@@ -34,9 +36,10 @@ for (let y = 0; y < GRID_SIZE; y++) {
 // Current selected color in HSV
 let currentColorHSV = { h: 0, s: 1, v: 1 };
 
-socket.on('gameBoard', (data, id) => {
+socket.on('gameBoard', (data, id, title) => {
   pixels = data;
   GLOBAL_BOARD_ID = id;
+  titleContainer.innerText = title;
   draw();
 });
 
@@ -153,21 +156,21 @@ function onZoom(event) {
   newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, newScale));
 
   // Calculate the world coordinates before scaling
-  const wx = (mx - translatePos.x) / scale;
+  const wx = ((mx - SIDEBAR_WIDTH) - translatePos.x) / scale;
   const wy = (my - translatePos.y) / scale;
 
   // Update scale
   scale = newScale;
 
   // Calculate new translation to keep the zoom centered on the mouse
-  translatePos.x = mx - wx * scale;
+  translatePos.x = (mx - SIDEBAR_WIDTH) - wx * scale;
   translatePos.y = my - wy * scale;
 
   draw();
 }
 
 function onMouseMove(event) {
-  mouseX = event.offsetX;
+  mouseX = event.offsetX - SIDEBAR_WIDTH;
   mouseY = event.offsetY;
 
   if (isRightDragging) {
@@ -214,7 +217,7 @@ function onClick(event) {
 
   // Transform mouse coordinates to grid coordinates
   const gridX = Math.floor(
-    (mx - translatePos.x) / (BASE_PIXEL_SIZE * scale)
+    ((mx - SIDEBAR_WIDTH) - translatePos.x) / (BASE_PIXEL_SIZE * scale)
   );
   const gridY = Math.floor(
     (my - translatePos.y) / (BASE_PIXEL_SIZE * scale)
