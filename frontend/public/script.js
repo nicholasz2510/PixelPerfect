@@ -60,7 +60,7 @@ async function handleAuthentication() {
             // Fetch and display the user's profile
             const user = await auth0Client.getUser();
             console.log('User profile:', user);
-            
+
             // const formData = new FormData();
             // formData.append('_id', user.sub);
             // Use fetch to send a POST request
@@ -70,7 +70,7 @@ async function handleAuthentication() {
                 },
                   method: 'POST',
                   body: JSON.stringify({ _id: user.sub }),
-          
+
               })
 
         } else {
@@ -142,6 +142,10 @@ const keysPressed = {
 };
 const PAN_SPEED = 20; // Pixels per frame
 let PIXEL_VAL = 10; // remaining pixels that can be placed.
+const CREATE_BOARD = document.getElementById("create");
+console.log("HELPPPPPPPPPPPPPP!!!!")
+console.log(CREATE_BOARD);
+const JOIN_BOARD = document.getElementById("join");
 
 // Preset Colors (12 colors)
 const presetColors = [
@@ -192,6 +196,11 @@ updateSliders();
 updateCurrentColor();
 draw();
 
+// Create new Board
+
+CREATE_BOARD.addEventListener("click", createNewBoard);
+JOIN_BOARD.addEventListener("click", joinNewBoard);
+
 
 // checkbox
 console.log("ENTERING");
@@ -209,6 +218,55 @@ for (let i = 0; i < cross.length; i++) {
 function doTaskComplete(event) {
   console.log(event);
   console.log(event.currentTarget);
+}
+
+function createNewBoard() {
+  console.log("entering");
+  document.getElementById("formWrapper").classList.remove("hidden");
+  let createForm = document.getElementById("createForm");
+  console.log(createForm)
+  createForm.classList.remove("hidden");
+  createForm.classList.add("boardForm");
+  createForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    let boardTitle = document.querySelector("#createForm input").value;
+    console.log(boardTitle);
+
+    fetch('http://localhost:3001/api/boards/', {
+      headers: {
+          'Content-Type': 'application/json'  // Set content type to JSON
+      },
+        method: 'POST',
+        body: JSON.stringify({ title: boardTitle }),
+    })
+    document.getElementById("formWrapper").classList.add("hidden");
+    document.getElementById("createForm").classList.remove("boardForm");
+    document.getElementById("createForm").classList.add("hidden");
+  })
+}
+
+function joinNewBoard() {
+  document.getElementById("formWrapper").classList.remove("hidden");
+  let joinForm = document.getElementById("joinForm");
+  console.log(joinForm)
+  joinForm.classList.remove("hidden");
+  joinForm.classList.add("boardForm");
+  joinForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    let boardId = document.querySelector("#joinForm input").value;
+    console.log(boardId);
+
+    fetch('http://localhost:3001/api/users/', {
+      headers: {
+          'Content-Type': 'application/json'  // Set content type to JSON
+      },
+        method: 'POST',
+        body: JSON.stringify({ boardId: boardId }),
+    })
+    document.getElementById("formWrapper").classList.add("hidden");
+    document.getElementById("joinForm").classList.remove("boardForm");
+    document.getElementById("joinForm").classList.add("hidden");
+  })
 }
 
 function onResize() {
