@@ -141,6 +141,7 @@ const keysPressed = {
   d: false,
 };
 const PAN_SPEED = 20; // Pixels per frame
+let PIXEL_VAL = 10; // remaining pixels that can be placed.
 
 // Preset Colors (12 colors)
 const presetColors = [
@@ -190,6 +191,25 @@ createPresetColorSquares();
 updateSliders();
 updateCurrentColor();
 draw();
+
+
+// checkbox
+console.log("ENTERING");
+let check = document.querySelectorAll("svg.icon-checkbox");
+for (let i = 0; i < check.length; i++) {
+  console.log(check[i]);
+  check[i].addEventListener("click", doTaskComplete);
+}
+let cross = document.querySelectorAll("svg.icon-x");
+for (let i = 0; i < cross.length; i++) {
+  console.log(cross[i]);
+  cross[i].addEventListener("click", doTaskCross);
+}
+
+function doTaskComplete(event) {
+  console.log(event);
+  console.log(event.currentTarget);
+}
 
 function onResize() {
   width = window.innerWidth;
@@ -267,6 +287,8 @@ function onClick(event) {
   // Ignore clicks from right mouse button
   if (event.button !== 0) return;
 
+  if (PIXEL_VAL === 0) return;
+
   // Check if the click is within the color picker panel
   const rect = colorPickerPanel.getBoundingClientRect();
   if (
@@ -304,6 +326,8 @@ function onClick(event) {
       currentColorHSV.s,
       currentColorHSV.v
     ) }); // Send pixel update to the server
+    PIXEL_VAL--;
+    document.getElementById("pixel-val").textContent = "" + PIXEL_VAL;
     draw();
     console.log(pixels[gridY][gridX] + " added at (" + gridX + ", " + gridY + ")");
   }

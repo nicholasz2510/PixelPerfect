@@ -67,7 +67,7 @@ body {
     background-color: #dddddd;
     cursor: pointer;
   }
-  
+
   #addBoardButtonWrapper {
     bottom: 20px;
     position: absolute;
@@ -91,7 +91,7 @@ body {
   #addBoardButton:hover {
     background-color: #dddddd;
   }
-  
+
   #pixelCanvas {
     display: block;
     padding-left: 300px;
@@ -107,7 +107,7 @@ body {
     left: 330px;
     font-size: 24px;
   }
-  
+
   /* Color Picker Panel */
   #colorPickerPanel {
     position: absolute;
@@ -128,10 +128,21 @@ body {
     /* top: 50%; */
     bottom: 20px;
     left: 320px;
+    padding: 10px;
     /* transform: translateY(-50%); */
     width: 300px;
     background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 11;
+  }
+
+  #pixel-val-setup {
+    position: absolute;
+    bottom: 190px;
+    left: 320px;
     padding: 10px;
+    background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 11;
@@ -193,7 +204,7 @@ body {
     margin-right: 5px;
     margin-left: 5px;
   }
-  
+
   /* Preset Colors */
   #presetColors {
     display: grid;
@@ -203,7 +214,7 @@ body {
     justify-items: center; /* Center the items horizontally */
     margin-top: 8px;
   }
-  
+
   .preset-color {
     width: 45px;
     height: 45px;
@@ -213,17 +224,17 @@ body {
     box-sizing: border-box;
     margin-bottom: 10px;
   }
-  
+
   .preset-color.selected {
     border: 2px solid black;
   }
-  
+
   #sliders {
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
-  
+
   #sliders input[type="range"] {
     -webkit-appearance: none;
     width: 100%;
@@ -235,7 +246,7 @@ body {
     margin: 0;
     padding: 0;
   }
-  
+
   /* Adjust thumb position to center vertically */
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -246,7 +257,7 @@ body {
     border: 2px solid #000000;
     margin-top: 0; /* Adjusted value to center thumb */
   }
-  
+
   input[type="range"]::-moz-range-thumb {
     width: 15px;
     height: 15px;
@@ -254,9 +265,9 @@ body {
     background: #ffffff;
     border: 2px solid #000000;
   }
-  
+
   /* Slider Tracks */
-  
+
   /* For WebKit Browsers */
   input[type="range"]::-webkit-slider-runnable-track {
     width: 100%;
@@ -265,19 +276,19 @@ body {
     background: none;
     border-radius: 5px;
   }
-  
+
   #hueSlider::-webkit-slider-runnable-track {
     background: linear-gradient(to right, red 0%, yellow 17%, lime 33%, cyan 50%, blue 67%, magenta 83%, red 100%);
   }
-  
+
   #saturationSlider::-webkit-slider-runnable-track {
     background: linear-gradient(to right, white, var(--saturation-slider-color));
   }
-  
+
   #valueSlider::-webkit-slider-runnable-track {
     background: linear-gradient(to right, black, var(--value-slider-color));
   }
-  
+
   /* For Firefox */
   input[type="range"]::-moz-range-track {
     width: 100%;
@@ -286,19 +297,19 @@ body {
     background: none;
     border-radius: 5px;
   }
-  
+
   #hueSlider::-moz-range-track {
     background: linear-gradient(to right, red 0%, yellow 17%, lime 33%, cyan 50%, blue 67%, magenta 83%, red 100%);
   }
-  
+
   #saturationSlider::-moz-range-track {
     background: linear-gradient(to right, white, var(--saturation-slider-color));
   }
-  
+
   #valueSlider::-moz-range-track {
     background: linear-gradient(to right, black, var(--value-slider-color));
   }
-  
+
   /* For IE */
   input[type=range]::-ms-track {
     width: 100%;
@@ -308,25 +319,24 @@ body {
     border-color: transparent;
     color: transparent;
   }
-  
+
   #hueSlider::-ms-track {
     background: linear-gradient(to right, red 0%, yellow 17%, lime 33%, cyan 50%, blue 67%, magenta 83%, red 100%);
   }
-  
+
   #saturationSlider::-ms-track {
     background: linear-gradient(to right, white, var(--saturation-slider-color));
   }
-  
+
   #valueSlider::-ms-track {
     background: linear-gradient(to right, black, var(--value-slider-color));
   }
-  
+
   /* Hide the default slider appearance */
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
   }
-  
+
   input[type="range"]:focus {
     outline: none;
   }
-  
