@@ -3,15 +3,21 @@ console.log("top of board controller");
 
 
 exports.handlePixelUpdate = (socket, io) => {
-  socket.on('updatePixel', async ({ boardId, x, y, color }) => {
-    console.log('updatePixel', x, y, color);
+  socket.on('updatePixel', async ({boardId, x, y, color }) => {
+    console.log('updatePixel', boardId, x, y, color);
     try {
-      console.log("Baka");
-      console.log(boardId);
+
       const boardData = await Board.findById(boardId);
-      boardData.toObject().board[y][x] = color;
-      
-      await board.save();
+      const boardDataObj = boardData.toObject().board;
+      boardDataObj[y][x] = color;
+     
+      boardData.board = boardDataObj;
+      console.log("NOOOO!");
+
+      await Board.findByIdAndUpdate(boardId, boardData, { new: true });
+
+      console.log("SUCCESS!");
+
       io.to(boardId).emit('pixelUpdated', { x, y, color });
       socket.emit('updateSuccess', { x, y, color });
     } catch (error) {

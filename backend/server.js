@@ -31,7 +31,7 @@ io.on('connection', async (socket) => {
 
   const initBoard = await Board.findById(GLOBAL_ROOM);
   
-  socket.emit('gameBoard', initBoard.toObject().board);
+  socket.emit('gameBoard', initBoard.toObject().board, GLOBAL_ROOM);
   console.log("GLOBAL ROOM: " + GLOBAL_ROOM);
   socket.join(GLOBAL_ROOM);
 
