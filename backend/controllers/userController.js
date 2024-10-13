@@ -83,7 +83,11 @@ exports.authUser = async (req, res) => {
     }
     
   
-    res.status(201).send('User created successfully');
+    res.status(201).send({
+      message : "User created successfully.",
+      rooms : user.rooms,
+      pixels : user.pixels
+    });
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).send('Error creating user' + error);
