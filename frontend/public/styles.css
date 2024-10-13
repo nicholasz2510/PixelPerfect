@@ -36,7 +36,12 @@ body {
   }
 
   #logoWrapper {
-    height: 120px;
+    height: 180px;
+  }
+
+  #logo {
+    height: auto;
+    width: 100%;
   }
 
   #gallery {
@@ -50,10 +55,17 @@ body {
     padding:10px 20px;
     margin: 10px;
     border-radius: 10px;
-    border: solid 2px #000000;
+    /* border: solid 2px #000000; */
     align-items: center;
     display: flex;
     font-size: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #eeeeee;
+  }
+
+  #galleryItem:hover {
+    background-color: #dddddd;
+    cursor: pointer;
   }
   
   #addBoardButtonWrapper {
@@ -67,12 +79,17 @@ body {
   }
 
   #addBoardButton {
-    background-color: #ffffff;
+    background-color: #eeeeee;
+    border: none;
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     font-size: 20px;
+  }
+
+  #addBoardButton:hover {
+    background-color: #dddddd;
   }
   
   #pixelCanvas {
@@ -108,15 +125,73 @@ body {
 
   #taskListPanel {
     position: absolute;
-    top: 50%;
+    /* top: 50%; */
+    bottom: 20px;
     left: 320px;
-    transform: translateY(-50%);
-    width: 180px;
+    /* transform: translateY(-50%); */
+    width: 300px;
     background-color: #ffffff;
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 11;
+  }
+
+  .icon-container {
+    display: flex;
+    gap: 0;
+  }
+
+    .icon {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        transition: fill 0.3s ease, stroke 0.3s ease;
+    }
+
+    .icon-checkbox, .icon-x, .icon-plus {
+        fill: #b0b0b0; /* Initial gray color */
+        stroke: #b0b0b0;
+        stroke-width: 2;
+    }
+
+    .icon:hover {
+        fill: #7a7a7a;  /* Darker gray on hover */
+        stroke: #7a7a7a;
+    }
+
+  #taskList {
+    padding-bottom: 10px;
+  }
+
+  #taskItem {
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+    align-items: center;
+    margin-right: -5px;
+  }
+
+  #taskItem p {
+    margin-top: 20px;
+    margin-left: 5px;
+  }
+
+  #addTaskButtonWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+  }
+
+  #addTaskButtonWrapper #taskInput {
+    width: 240px;
+    height: 20px;
+    border-radius: 5px;
+    border: 1px solid #b0b0b0;
+    padding: 5px;
+    margin-right: 5px;
+    margin-left: 5px;
   }
   
   /* Preset Colors */
@@ -169,7 +244,7 @@ body {
     border-radius: 50%;
     background: #ffffff;
     border: 2px solid #000000;
-    margin-top: -5px; /* Adjusted value to center thumb */
+    margin-top: 0; /* Adjusted value to center thumb */
   }
   
   input[type="range"]::-moz-range-thumb {
