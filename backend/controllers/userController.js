@@ -37,7 +37,9 @@ exports.authUser = async (req, res) => {
   const _id = req.body._id;
 
   try {
-    const user = User.findById(_id);
+    let user = await User.findOne({ _id: _id });
+    console.log(user);
+    console.log("IDDDDD " + _id);
       if(!user) {
         user = new User({
           _id: _id

@@ -12,5 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.1"
-  }
+  },
+  "proxy" : "http://localhost:3001"
 }

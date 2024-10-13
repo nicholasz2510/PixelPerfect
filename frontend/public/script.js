@@ -61,12 +61,16 @@ async function handleAuthentication() {
             const user = await auth0Client.getUser();
             console.log('User profile:', user);
             
-            const formData = new FormData();
-            formData.append('_id', user.sub);
+            // const formData = new FormData();
+            // formData.append('_id', user.sub);
             // Use fetch to send a POST request
-              fetch('/users/auth', {
+              fetch('http://localhost:3001/api/users/auth', {
+                headers: {
+                    'Content-Type': 'application/json'  // Set content type to JSON
+                },
                   method: 'POST',
-                  body: formData,
+                  body: JSON.stringify({ _id: user.sub }),
+          
               })
 
         } else {
