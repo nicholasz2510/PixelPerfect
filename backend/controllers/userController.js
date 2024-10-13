@@ -13,7 +13,7 @@ exports.getAllUsers = async (req, res) => {
 exports.addRoom = async (req, res) => {
   try {
     const currUser = await User.findById(req.body.userId);
-    if(currUser && !currUser.rooms.includes(req.body.boardId)) {
+    if(currUser && !currUser.rooms.includes(req.body.boardId) && Board.findById(req.body.boardId)) {
       currUser.rooms.push(req.body.boardId);
       currUser.pixels.push(10);
       await currUser.save();

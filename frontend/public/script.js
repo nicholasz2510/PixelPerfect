@@ -112,6 +112,11 @@ function addGalleryItem(title) {
   // Append the new gallery item to the #gallery div
   const gallery = document.getElementById('gallery');
   gallery.appendChild(newGalleryItem);
+
+  newGalleryItem.addEventListener('click', async () => {
+    console.log("clicked on " + title);
+    socket.emit('roomJoin', Object.keys(usersBoards).find(key => usersBoards[key] === title));
+  });
 }
 
 // Initialize Auth0 and handle the session on page load
@@ -303,9 +308,13 @@ function joinNewBoard() {
         method: 'POST',
         body: JSON.stringify({ boardId, userId }),
     })
-    request = await request.json();
-    usersBoards[boardId] = request.board.title;
-    addGalleryItem(boardTitle);
+    requestJson = await request.json();
+    if (request.status === 201) {
+      usersBoards[boardId] = requestJson.board.title;
+      addGalleryItem(boardTitle);
+    } else {
+      // TODO display error message (invalid join code)
+    }
     document.getElementById("formWrapper").classList.add("hidden");
     document.getElementById("joinForm").classList.remove("boardForm");
     document.getElementById("joinForm").classList.add("hidden");
