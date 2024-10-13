@@ -10,12 +10,12 @@ const boardSchema = new mongoose.Schema({
       type: Date,
       default: Date.now,
     },
-    
+
     status: {
       type: String,
       default: 'active',
     },
-   
+
     creator: {
       type: String,
       default: 'sbkiditi',

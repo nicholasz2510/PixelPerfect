@@ -33,34 +33,60 @@
     </div>
 
     <script>
+        console.log("Script started");
         let auth0Client;
 
         async function configureAuth0() {
             try {
-                // Initialize the Auth0 client
+                console.log("Configuring Auth0");
                 auth0Client = await createAuth0Client({
-                    domain: "https://dev-c64uddi44r8sy6bb.us.auth0.com",       // Replace with your Auth0 domain
-                    client_id: "ZUotY0AroKpXCdQjvoanrCsfL8aXJfYz", // Replace with your Auth0 client ID
-                    redirect_uri: window.location.origin + "/board.html"  // Redirect to board.html after login
+                    domain: "dev-c64uddi44r8sy6bb.us.auth0.com",
+                    client_id: "ZUotY0AroKpXCdQjvoanrCsfL8aXJfYz",
+                    redirect_uri: window.location.origin
                 });
 
-                // Check if the user is already authenticated
+                // Check for the code and state parameters
+                if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
+                    console.log("Auth0 redirect detected");
+                    await auth0Client.handleRedirectCallback();
+                    window.history.replaceState({}, document.title, "/");
+                }
+
                 const isAuthenticated = await auth0Client.isAuthenticated();
+                console.log("Is authenticated:", isAuthenticated);
 
                 if (isAuthenticated) {
-                    // Redirect to board.html if the user is authenticated
-                    window.location.href = "/board.html";
+                    await handleAuthentication();
                 }
             } catch (error) {
                 console.error("Error configuring Auth0", error);
             }
         }
 
+        async function handleAuthentication() {
+            console.log("Handling authentication");
+            try {
+                const user = await auth0Client.getUser();
+                console.log("User:", user);
+                const userId = user.sub;
+                const userEmail = user.email;
+                console.log("User ID:", userId);
+                console.log("User Email:", userEmail);
+
+                // Here you would make an API call to your backend
+                // For now, we'll just redirect to board.html
+                window.location.href = "/board.html";
+            } catch (error) {
+                console.error("Error handling authentication", error);
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", async () => {
+            console.log("DOM content loaded");
             await configureAuth0();
 
-            // Handle the login button click
             document.getElementById("login-btn").addEventListener("click", async () => {
+                console.log("Login button clicked");
                 try {
                     await auth0Client.loginWithRedirect();
                 } catch (error) {

@@ -18,3 +18,14 @@ exports.createUser = async (req, res) => {
     res.status(400).json({ error: 'Bad request' });
   }
 };
+
+exports.addUser = async (req, res) => {
+  try {
+    const uniqueSub = req.body.sub;
+    const email = req.body.email;
+    const newUser = {"name": uniqueSub, "email": email};
+    res.status(200).json(newUser);
+  } catch (error) {
+    res.status(400).json({ error: 'Bad request' });
+  }
+};

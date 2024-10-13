@@ -19,7 +19,6 @@ const userSchema = new mongoose.Schema({
     default: () => [GLOBAL_ROOM]
   }
 
-  
 });
 
 module.exports = mongoose.model('User', userSchema);
