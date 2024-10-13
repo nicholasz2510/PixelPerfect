@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const GLOBAL_ROOM = "670b583bacdb17a8c5c211af";
+const GLOBAL_ROOM = "670c015a8088c398caa65eb4";
 
 const userSchema = new mongoose.Schema({
   _id : {

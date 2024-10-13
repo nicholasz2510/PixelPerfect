@@ -84,9 +84,6 @@ exports.updateBoard = async (req, res) => {
   const gridY = req.body.gridY;
   const color = req.body.color;
 
-  // const { board } = req.body; // The new state of the board (e.g., updated 2D array)
-
-
   try {
 
     const oldBoard = await Board.findById(boardId);

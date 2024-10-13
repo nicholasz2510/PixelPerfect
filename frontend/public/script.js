@@ -1,5 +1,6 @@
 // public/script.js
 const socket = io('http://localhost:3001' ); // Connect to the backend server
+const GLOBAL_BOARD_ID = "670c015a8088c398caa65eb4";
 let currentBoardId;
 console.log('io is', io);
 
@@ -345,7 +346,7 @@ for (let i = 0; i < cross.length; i++) {
   cross[i].addEventListener("click", doTaskCross);
 }
 
-function doTaskComplete(event) {
+async function doTaskComplete(event) {
   console.log(event);
   console.log(event.currentTarget);
 }
