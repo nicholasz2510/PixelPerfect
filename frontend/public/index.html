@@ -1,14 +1,73 @@
-<!-- public/index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Sign in</title>
-  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/1.19/auth0-spa-js.production.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+        #login {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-  Hello World
+    <div id="login">
+        <h2>Please sign in</h2>
+        <button id="login-btn">Log in with Auth0</button>
+    </div>
+
+    <script>
+        let auth0Client;
+
+        async function configureAuth0() {
+            try {
+                // Initialize the Auth0 client
+                auth0Client = await createAuth0Client({
+                    domain: "https://dev-c64uddi44r8sy6bb.us.auth0.com",       // Replace with your Auth0 domain
+                    client_id: "ZUotY0AroKpXCdQjvoanrCsfL8aXJfYz", // Replace with your Auth0 client ID
+                    redirect_uri: window.location.origin + "/board.html"  // Redirect to board.html after login
+                });
+
+                // Check if the user is already authenticated
+                const isAuthenticated = await auth0Client.isAuthenticated();
+
+                if (isAuthenticated) {
+                    // Redirect to board.html if the user is authenticated
+                    window.location.href = "/board.html";
+                }
+            } catch (error) {
+                console.error("Error configuring Auth0", error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            await configureAuth0();
+
+            // Handle the login button click
+            document.getElementById("login-btn").addEventListener("click", async () => {
+                try {
+                    await auth0Client.loginWithRedirect();
+                } catch (error) {
+                    console.error("Login failed", error);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
