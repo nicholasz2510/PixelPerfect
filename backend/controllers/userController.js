@@ -14,6 +14,13 @@ exports.addRoom = async (req, res) => {
     const currUser = User.findById(req.body.userId);
     if(currUser) {
       currUser.rooms.push(req.body.boardId);
+      const rooms = [...socket.rooms]; // Get a copy of all rooms this socket has joined
+        rooms.forEach((room) => {
+            if (room !== socket.id) { // Don't remove the socket from its own room (default room)
+                socket.leave(room);
+                console.log(`Socket removed from room: ${room}`);
+            }
+        });
       await currUser.save();
       res.status(201).json(currUser.rooms); 
     }
