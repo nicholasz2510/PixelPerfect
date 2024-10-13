@@ -125,3 +125,62 @@ exports.getBoardById = async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve board' });
   }
 };
+
+exports.addTask = async (req, res) => {
+  let board = await Board.findById(req.body.boardId);
+  if(!board) {
+    res.status(404).json({message: "Board not found"});
+  } else {
+    const task = req.body.task;
+    const points = req.body.points;
+    try {
+      board.tasks.push({
+          task: task,
+          points: points
+      })
+
+      await board.save();
+
+  
+      res.status(200).json({ "tasks": board.tasks });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to save board' });
+    }
+
+  }
+
+};
+
+exports.getTasks = async (req, res) => {
+  let board = await Board.findById(req.body.boardId);
+  if(!board) {
+    res.status(404).json({message: "Board not found"});
+  } else {
+    res.status(200).json({ "tasks": board.tasks });
+  }
+  
+    
+};
+
+exports.removeTask = async (req, res) => {
+  let board = await Board.findById(req.body.boardId);
+
+  if(!board) {
+    res.status(404).json({message: "Board not found"});
+  }
+
+  await Room.findByIdAndUpdate(
+    roomId,
+    {
+      $pull: { tasks: { task: req.body.task } }
+    },
+    { new: true }  
+  )
+  if (updatedRoom) {
+    res.status(200).json({tasks : updatedRoom.tasks});
+  } else {
+    res.status(404).json({message: "Board not found"});
+  }
+
+};
+

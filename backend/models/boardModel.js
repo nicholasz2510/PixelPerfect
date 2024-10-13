@@ -28,6 +28,13 @@ const boardSchema = new mongoose.Schema({
       required: true
     },
 
+    tasks: [
+      {
+        task: { type: String, required: true }, 
+        points: { type: Number, required: true }       
+      }
+    ]
+
 
   });
 

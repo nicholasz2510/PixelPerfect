@@ -7,5 +7,8 @@ const boardController = require('../controllers/boardController');
 router.post('/', boardController.createBoard);
 router.put('/:boardId', boardController.updateBoard);
 router.get('/:boardId', boardController.getBoardById);
+router.get('/:boardId/tasks', boardController.getTasks);
+router.post('/tasks/add', boardController.addTask);
+router.post('/tasks/remove', boardController.removeTask);
 
 module.exports = router;
