@@ -1,32 +1,53 @@
 const Board = require('../models/boardModel');
+console.log("top of board controller");
 
-let pixelBoard = Array(100).fill().map(() => Array(100).fill("#FFFFFF"));
 
 exports.handlePixelUpdate = (socket, io) => {
-  socket.on('updatePixel', async ({ x, y, color }) => {
-    console.log('updatePixel', x, y, color);
+  socket.on('updatePixel', async ({boardId, x, y, color }) => {
+    console.log('updatePixel', boardId, x, y, color);
     try {
-      pixelBoard[y][x] = color;
-      io.emit('pixelUpdated', { x, y, color });
+
+      const boardData = await Board.findById(boardId);
+      const boardDataObj = boardData.toObject().board;
+      boardDataObj[y][x] = color;
+     
+      boardData.board = boardDataObj;
+      console.log("NOOOO!");
+
+      await Board.findByIdAndUpdate(boardId, boardData, { new: true });
+
+      console.log("SUCCESS!");
+
+      io.to(boardId).emit('pixelUpdated', { x, y, color });
       socket.emit('updateSuccess', { x, y, color });
     } catch (error) {
-      socket.emit('updateError', { message: 'Failed to update pixel', error });
+      socket.emit('updateError', { message: 'Failed to update board or pixel', error });
     }
   });
 };
 
 exports.handleNewConnection = (socket) => {
-  socket.emit('initialBoard', pixelBoard);
-  console.log('board connected');
-};
+  console.log("top of handle connection");
 
-exports.handleDisconnection = (socket) => {
-  socket.on('disconnect', () => {
-    console.log('board died');
+  socket.on('roomJoin', (boardId) => {
+    const boardFound = Board.findById(boardId);
+    if(boardFound) {
+      socket.join(boardId);
+      socket.emit('gameBoard', boardFound.board);
+      socket.emit('joinSuccess', "Connected to room  " + boardId);
+      console.log('Connected to room ' + boardId);
+    } else {
+      socket.emit('failureJoin', "failed to join room");
+      console.log("ROOM IS COOKED");
+    }
   });
 };
 
-
+exports.handleDisconnection = (socket) => {
+  socket.on('disconnect', (boardId) => {
+    socket.leave(boardId);
+  });
+};
 
 exports.createBoard = async (req, res) => {
   try {
