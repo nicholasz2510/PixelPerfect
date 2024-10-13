@@ -4,8 +4,8 @@ const userController = require('../controllers/userController');
 
 // Define routes
 router.get('/', userController.getAllUsers);
-router.post('/', userController.createUser);
+router.post('/auth/', userController.authUser);
+router.post('/board', userController.addRoom);
 router.get('/:userId/boards', userController.getAllRooms);
-router.post('/:userId/:boardId', userController.addRoom);
 
 module.exports = router;

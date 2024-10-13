@@ -11,9 +11,9 @@ exports.getAllUsers = async (req, res) => {
 
 exports.addRoom = async (req, res) => {
   try {
-    const currUser = User.findById(req.params.userId);
+    const currUser = User.findById(req.body.userId);
     if(currUser) {
-      currUser.rooms.push(req.params.boardId);
+      currUser.rooms.push(req.body.boardId);
       await currUser.save();
       res.status(201).json(currUser.rooms); 
     }
@@ -33,20 +33,20 @@ exports.getAllRooms = async (req, res) => {
   }
 };
 
-exports.createUser = async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+exports.authUser = async (req, res) => {
   const _id = req.body._id;
 
   try {
-    const user = new User({
-      username: username,
-      password: password, 
-      _id: id
-    });
-  
-    // Save the user to the database
-    await user.save();
+    const user = User.findById(_id);
+      if(!user) {
+        user = new User({
+          _id: _id
+        });
+      
+        // Save the user to the database
+        await user.save();
+    }
+    
   
     res.status(201).send('User created successfully');
   } catch (error) {
