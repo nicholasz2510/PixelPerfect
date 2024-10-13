@@ -13,11 +13,11 @@ exports.getAllUsers = async (req, res) => {
 exports.addRoom = async (req, res) => {
   try {
     const currUser = await User.findById(req.body.userId);
-    if(currUser && !currUser.rooms.includes(req.body.boardId) && Board.findById(req.body.boardId)) {
+    if(currUser && !currUser.rooms.includes(req.body.boardId) && await Board.findById(req.body.boardId)) {
       currUser.rooms.push(req.body.boardId);
       currUser.pixels.push(10);
       await currUser.save();
-      res.status(201).json({rooms: currUser.rooms, board: Board.findById(req.body.boardId)}); 
+      res.status(201).json({rooms: currUser.rooms, board: await Board.findById(req.body.boardId)}); 
     }
   } catch (error) {
     res.status(400).json({ error: 'Bad request' });
@@ -55,7 +55,7 @@ exports.setPixels = async (req, res) => {
 
 exports.getAllRooms = async (req, res) => {
   try {
-    const user = User.findById(req.params.userId);
+    const user = await User.findById(req.params.userId);
     if(user) {
       res.status(200).json({
        "rooms":  user.rooms,

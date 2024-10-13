@@ -214,7 +214,7 @@ body {
 
   #pixel-val-setup {
     position: absolute;
-    bottom: 190px;
+    top: 70px;
     left: 320px;
     padding: 10px;
     background-color: #ffffff;
