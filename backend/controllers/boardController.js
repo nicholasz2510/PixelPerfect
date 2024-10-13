@@ -63,7 +63,9 @@ exports.handleDisconnection = (socket) => {
 exports.createBoard = async (req, res) => {
   try {
     const newBoard = new Board(
-      {"creator" : req.body.creator}
+      {"creator" : req.body.creator,
+        "title" : req.body.title
+      }
     );
 
     await newBoard.save(); 
