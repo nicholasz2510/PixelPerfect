@@ -419,8 +419,7 @@ function onClick(event) {
 
 function onKeyDown(event) {
   const key = event.key.toLowerCase();
-  const textBox = document.getElementById('taskInput');
-  if (keysPressed.hasOwnProperty(key) && document.activeElement !== textBox) {
+  if (keysPressed.hasOwnProperty(key) && document.activeElement.classList.contains('textbox') === false) {
     keysPressed[key] = true;
     event.preventDefault(); // Prevent default scrolling behavior
   }
