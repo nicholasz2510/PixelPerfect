@@ -1,6 +1,6 @@
 // public/script.js
 const socket = io('http://localhost:3001' ); // Connect to the backend server
-let GLOBAL_BOARD_ID;
+let currentBoardId;
 console.log('io is', io);
 
 const canvas = document.getElementById('pixelCanvas');
@@ -22,6 +22,10 @@ canvas.height = height;
 // Pixel grid settings
 const GRID_SIZE = 100;
 const BASE_PIXEL_SIZE = Math.min(width, height) / GRID_SIZE; // Base pixel size without scaling
+
+let usersBoards = {};
+
+let userId;
 
 let auth0Client;
 
@@ -60,11 +64,12 @@ async function handleAuthentication() {
             // Fetch and display the user's profile
             const user = await auth0Client.getUser();
             console.log('User profile:', user);
+            userId = user.sub;
 
             // const formData = new FormData();
             // formData.append('_id', user.sub);
             // Use fetch to send a POST request
-              fetch('http://localhost:3001/api/users/auth', {
+            let response = await fetch('http://localhost:3001/api/users/auth', {
                 headers: {
                     'Content-Type': 'application/json'  // Set content type to JSON
                 },
@@ -72,6 +77,14 @@ async function handleAuthentication() {
                   body: JSON.stringify({ _id: user.sub }),
 
               })
+            if (response.ok) {
+              response = await response.json();
+              console.log(response);
+              for (let i = 0; i < response.rooms.length; i++) {
+                usersBoards[response.rooms[i]] = response.titles[i];
+                addGalleryItem(response.titles[i], response.rooms[i]);
+              }
+            }
 
         } else {
             console.log("User is not authenticated, redirecting to login...");
@@ -80,9 +93,54 @@ async function handleAuthentication() {
         }
     } catch (error) {
         console.error("Error during authentication:", error);
-        // dfidsfs();
         window.location.href = '/index.html';  // Redirect to login if there's an error
     }
+}
+
+function addGalleryItem(title, id) {
+  // Create a new div element for the gallery item
+  const newGalleryItem = document.createElement('div');
+  newGalleryItem.classList.add('galleryItem'); // Add a class if needed for styling
+
+  // Create a new p element for the title
+  const titleElement = document.createElement('p');
+  titleElement.innerText = title;
+// Create the share icon using an <img> element
+const shareIcon = document.createElement('img');
+shareIcon.classList.add('icon', 'icon-share', 'tooltip'); // Add classes for styling
+shareIcon.setAttribute('src', 'share.png'); // Path to your share.png file
+shareIcon.setAttribute('alt', 'Share'); // Accessibility attribute
+shareIcon.setAttribute('aria-label', 'Share'); // Accessibility label
+shareIcon.setAttribute('role', 'button'); // Accessibility role
+shareIcon.tabIndex = 0; // Make it focusable for keyboard users
+shareIcon.setAttribute('title', 'Copy join code'); // Tooltip text
+
+const tooltip = document.createElement('span');
+tooltip.classList.add('tooltiptext'); // Add a class for styling
+tooltip.innerText = 'Copy join code'; // Tooltip text
+
+shareIcon.appendChild(tooltip); // Append the tooltip to the share icon
+
+// Optionally, add a click event to the share icon
+shareIcon.addEventListener('click', async () => {
+  await navigator.clipboard.writeText(id);
+});
+
+  // Append the p element (title) to the new gallery item div
+  newGalleryItem.appendChild(titleElement);
+
+  newGalleryItem.appendChild(shareIcon);
+
+  // Append the new gallery item to the #gallery div
+  const gallery = document.getElementById('gallery');
+  gallery.appendChild(newGalleryItem);
+
+  titleElement.addEventListener('click', async () => {
+    console.log("clicked on " + title);
+    currentBoardId = Object.keys(usersBoards).find(key => usersBoards[key] === title);
+    console.log("clicked on " + currentBoardId);
+    socket.emit('roomJoin', currentBoardId);
+  });
 }
 
 // Initialize Auth0 and handle the session on page load
@@ -103,8 +161,9 @@ let currentColorHSV = { h: 0, s: 1, v: 1 };
 
 socket.on('gameBoard', (data, id, title) => {
   pixels = data;
-  GLOBAL_BOARD_ID = id;
+  currentBoardId = id;
   titleContainer.innerText = title;
+  console.log(title);
   draw();
 });
 
@@ -112,6 +171,10 @@ socket.on('pixelUpdated', ({ x, y, color }) => {
   pixels[y][x] = color; // Update the pixel color in the local array
   draw();
 });
+
+// socket.on('joinSuccess', (boardId) => {
+//   currentBoardId = boardId;
+// });
 
 // Transformation variables
 let scale = 1;
@@ -294,18 +357,28 @@ function createNewBoard() {
   console.log(createForm)
   createForm.classList.remove("hidden");
   createForm.classList.add("boardForm");
-  createForm.addEventListener("submit", (event) => {
+  createForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     let boardTitle = document.querySelector("#createForm input").value;
     console.log(boardTitle);
 
-    fetch('http://localhost:3001/api/boards/', {
+    let response1 = await fetch('http://localhost:3001/api/boards/', {
       headers: {
           'Content-Type': 'application/json'  // Set content type to JSON
       },
         method: 'POST',
         body: JSON.stringify({ title: boardTitle }),
-    })
+    });
+    response1 = await response1.json();
+    let response2 = await fetch('http://localhost:3001/api/users/board/', {
+      headers: {
+          'Content-Type': 'application/json'  // Set content type to JSON
+      },
+        method: 'POST',
+        body: JSON.stringify({ boardId: response1.boardId , userId}),
+    });
+    usersBoards[response1.boardId] = boardTitle;
+    addGalleryItem(boardTitle, response1.boardId);
     document.getElementById("formWrapper").classList.add("hidden");
     document.getElementById("createForm").classList.remove("boardForm");
     document.getElementById("createForm").classList.add("hidden");
@@ -318,18 +391,25 @@ function joinNewBoard() {
   console.log(joinForm)
   joinForm.classList.remove("hidden");
   joinForm.classList.add("boardForm");
-  joinForm.addEventListener("submit", (event) => {
+  joinForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     let boardId = document.querySelector("#joinForm input").value;
     console.log(boardId);
 
-    fetch('http://localhost:3001/api/users/', {
+    let request = await fetch('http://localhost:3001/api/users/board', {
       headers: {
           'Content-Type': 'application/json'  // Set content type to JSON
       },
         method: 'POST',
-        body: JSON.stringify({ boardId: boardId }),
+        body: JSON.stringify({ boardId, userId }),
     })
+    requestJson = await request.json();
+    if (request.status === 201) {
+      usersBoards[boardId] = requestJson.board.title;
+      addGalleryItem(boardTitle, boardId);
+    } else {
+      // TODO display error message (invalid join code)
+    }
     document.getElementById("formWrapper").classList.add("hidden");
     document.getElementById("joinForm").classList.remove("boardForm");
     document.getElementById("joinForm").classList.add("hidden");
@@ -446,7 +526,7 @@ function onClick(event) {
       currentColorHSV.s,
       currentColorHSV.v
     );
-    socket.emit('updatePixel', {boardId: GLOBAL_BOARD_ID, x: gridX, y: gridY, color: hsvToHex(
+    socket.emit('updatePixel', {boardId: currentBoardId, x: gridX, y: gridY, color: hsvToHex(
       currentColorHSV.h,
       currentColorHSV.s,
       currentColorHSV.v
@@ -460,8 +540,7 @@ function onClick(event) {
 
 function onKeyDown(event) {
   const key = event.key.toLowerCase();
-  const textBox = document.getElementById('taskInput');
-  if (keysPressed.hasOwnProperty(key) && document.activeElement !== textBox) {
+  if (keysPressed.hasOwnProperty(key) && document.activeElement.classList.contains('textbox') === false) {
     keysPressed[key] = true;
     event.preventDefault(); // Prevent default scrolling behavior
   }

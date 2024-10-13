@@ -19,6 +19,7 @@ exports.handlePixelUpdate = (socket, io) => {
       console.log("SUCCESS!");
 
       io.to(boardId).emit('pixelUpdated', { x, y, color });
+      console.log(boardId);
       socket.emit('updateSuccess', { x, y, color });
     } catch (error) {
       socket.emit('updateError', { message: 'Failed to update board or pixel', error });
@@ -29,8 +30,9 @@ exports.handlePixelUpdate = (socket, io) => {
 exports.handleNewConnection = (socket) => {
   console.log("top of handle connection");
 
-  socket.on('roomJoin', (boardId) => {
-    const boardFound = Board.findById(boardId);
+  socket.on('roomJoin', async (boardId) => {
+    const boardFound = await Board.findById(boardId);
+    console.log(boardId);
     if(boardFound) {
 
       const rooms = [...socket.rooms]; // Get a copy of all rooms this socket has joined
@@ -42,8 +44,9 @@ exports.handleNewConnection = (socket) => {
       });
 
       socket.join(boardId);
-      socket.emit('gameBoard', boardFound.board);
-      socket.emit('joinSuccess', "Connected to room  " + boardId);
+      console.log("ROOM IS NOT COOKED HOPEFULLY " + boardFound);
+      socket.emit('gameBoard', boardFound.board, boardFound._id, boardFound.title);
+      socket.emit('joinSuccess', boardId);
       console.log('Connected to room ' + boardId);
     } else {
       socket.emit('failureJoin', "failed to join room");
@@ -61,7 +64,9 @@ exports.handleDisconnection = (socket) => {
 exports.createBoard = async (req, res) => {
   try {
     const newBoard = new Board(
-      {"creator" : req.body.creator}
+      {"creator" : req.body.creator,
+        "title" : req.body.title
+      }
     );
 
     await newBoard.save();
@@ -120,3 +125,62 @@ exports.getBoardById = async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve board' });
   }
 };
+
+exports.addTask = async (req, res) => {
+  let board = await Board.findById(req.body.boardId);
+  if(!board) {
+    res.status(404).json({message: "Board not found"});
+  } else {
+    const task = req.body.task;
+    const points = req.body.points;
+    try {
+      board.tasks.push({
+          task: task,
+          points: points
+      })
+
+      await board.save();
+
+  
+      res.status(200).json({ "tasks": board.tasks });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to save board' });
+    }
+
+  }
+
+};
+
+exports.getTasks = async (req, res) => {
+  let board = await Board.findById(req.body.boardId);
+  if(!board) {
+    res.status(404).json({message: "Board not found"});
+  } else {
+    res.status(200).json({ "tasks": board.tasks });
+  }
+  
+    
+};
+
+exports.removeTask = async (req, res) => {
+  let board = await Board.findById(req.body.boardId);
+
+  if(!board) {
+    res.status(404).json({message: "Board not found"});
+  }
+
+  await Room.findByIdAndUpdate(
+    roomId,
+    {
+      $pull: { tasks: { task: req.body.task } }
+    },
+    { new: true }  
+  )
+  if (updatedRoom) {
+    res.status(200).json({tasks : updatedRoom.tasks});
+  } else {
+    res.status(404).json({message: "Board not found"});
+  }
+
+};
+

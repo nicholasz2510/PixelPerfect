@@ -24,9 +24,16 @@ const boardSchema = new mongoose.Schema({
 
     title: {
       type: String,
-      default: 'untitled board',
+      default: 'Untitled board',
       required: true
     },
+
+    tasks: [
+      {
+        task: { type: String, required: true }, 
+        points: { type: Number, required: true }       
+      }
+    ]
 
 
   });

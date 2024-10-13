@@ -5,30 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <script src="https://cdn.auth0.com/js/auth0-spa-js/1.19/auth0-spa-js.production.js"></script>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-pDpl6jXk7y5g8/Q0l9GhZp9WWvPOiKXhPcwIejB0bppzF4I+7k8Ck1kVZqI+bEBj2i6G6uxk71xvStygkOVc5Q=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-color: #EEEEEE;
+            --secondary-color: #ffffff;
+            --background-color: #f5f7fa;
+            --border-color: #e0e0e0;
+            --text-color: #333333;
+            --box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+            --border-radius: 12px;
+            --font-family: 'Roboto', sans-serif;
+        }
+
+        /* Reset some default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
         body {
-            font-family: Arial, sans-serif;
+            font-family: var(--font-family);
+            background-color: var(--background-color);
             display: flex;
             height: 100vh;
             justify-content: center;
             align-items: center;
+            color: var(--text-color);
         }
+
+        /* Login Container */
         #login {
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+            background-color: var(--secondary-color);
+            padding: 40px 30px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
+        /* Hover effect for Login Container */
+        #login:hover {
+            transform: translateY(-5px);
+            box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 20px;
+        }
+
+        /* Heading Styling */
+        #login h2 {
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        /* Button Styling */
         button {
-            padding: 10px 20px;
-            font-size: 16px;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+        }
+
+        /* Button Hover Effect */
+        button:hover {
+            background-color: #DDDDDD;
+            transform: translateY(-2px);
+        }
+
+        /* Button Active Effect */
+        button:active {
+            transform: translateY(0);
+            background-color: #DDDDDD;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 500px) {
+            #login {
+                padding: 30px 20px;
+            }
+
+            #login h2 {
+                font-size: 1.5rem;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+            }
         }
     </style>
 </head>
 <body>
     <div id="login">
-        <h2>Please sign in</h2>
+        <h2>Sign in to PixelPerfect!</h2>
         <button id="login-btn">Log in with Auth0</button>
     </div>
 
@@ -41,7 +129,7 @@
                 auth0Client = await createAuth0Client({
                     domain: "dev-c64uddi44r8sy6bb.us.auth0.com",       // Replace with your Auth0 domain
                     client_id: "lQsAe1JJ9anKD9oFtjrItojIboqI31B0", // Replace with your Auth0 client ID
-                    redirect_uri: window.location.origin + "/board.html",  // Redirect to board.html after login
+                    redirect_uri: window.location.origin + "/board.html",  // Redirect to board.html after lousegin
                     cacheLocation: 'localstorage'  // Persist session across page reloads
                 });
 

@@ -1,4 +1,5 @@
 const User = require('../models/userModel');
+const Board = require('../models/boardModel');
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -12,11 +13,11 @@ exports.getAllUsers = async (req, res) => {
 exports.addRoom = async (req, res) => {
   try {
     const currUser = await User.findById(req.body.userId);
-    if(currUser) {
+    if(currUser && !currUser.rooms.includes(req.body.boardId) && await Board.findById(req.body.boardId)) {
       currUser.rooms.push(req.body.boardId);
       currUser.pixels.push(10);
       await currUser.save();
-      res.status(201).json(currUser.rooms); 
+      res.status(201).json({rooms: currUser.rooms, board: await Board.findById(req.body.boardId)}); 
     }
   } catch (error) {
     res.status(400).json({ error: 'Bad request' });
@@ -54,7 +55,7 @@ exports.setPixels = async (req, res) => {
 
 exports.getAllRooms = async (req, res) => {
   try {
-    const user = User.findById(req.params.userId);
+    const user = await User.findById(req.params.userId);
     if(user) {
       res.status(200).json({
        "rooms":  user.rooms,
@@ -78,12 +79,19 @@ exports.authUser = async (req, res) => {
           _id: _id
         });
       
-        // Save the user to the database
         await user.save();
     }
     
+    const titles = [];
+    for(let i = 0; i < user.rooms.length; i++) {
+      titles.push((await Board.findById(user.rooms[i])).title);
+    }
   
-    res.status(201).send('User created successfully');
+    res.status(201).json({
+      titles,
+      rooms : user.rooms,
+      pixels : user.pixels
+    });
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).send('Error creating user' + error);
