@@ -19,6 +19,7 @@ exports.handlePixelUpdate = (socket, io) => {
       console.log("SUCCESS!");
 
       io.to(boardId).emit('pixelUpdated', { x, y, color });
+      console.log(boardId);
       socket.emit('updateSuccess', { x, y, color });
     } catch (error) {
       socket.emit('updateError', { message: 'Failed to update board or pixel', error });
@@ -43,7 +44,7 @@ exports.handleNewConnection = (socket) => {
 
 
       socket.join(boardId);
-      socket.emit('gameBoard', boardFound.board);
+      socket.emit('gameBoard', boardFound.board, boardFound._id, boardFound.title);
       socket.emit('joinSuccess', "Connected to room  " + boardId);
       console.log('Connected to room ' + boardId);
     } else {

@@ -105,6 +105,7 @@ socket.on('gameBoard', (data, id, title) => {
   pixels = data;
   GLOBAL_BOARD_ID = id;
   titleContainer.innerText = title;
+  console.log(title);
   draw();
 });
 
