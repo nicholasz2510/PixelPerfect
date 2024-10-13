@@ -1,5 +1,32 @@
 const Board = require('../models/boardModel');
 
+let pixelBoard = Array(100).fill().map(() => Array(100).fill("#FFFFFF"));
+
+exports.handlePixelUpdate = (socket, io) => {
+  socket.on('updatePixel', async ({ x, y, color }) => {
+    try {
+      pixelBoard[y][x] = color;
+      io.emit('pixelUpdated', { x, y, color });
+      socket.emit('updateSuccess', { x, y, color });
+    } catch (error) {
+      socket.emit('updateError', { message: 'Failed to update pixel', error });
+    }
+  });
+};
+
+exports.handleNewConnection = (socket) => {
+  socket.emit('initialBoard', pixelBoard);
+  console.log('board connected');
+};
+
+xports.handleDisconnection = (socket) => {
+  socket.on('disconnect', () => {
+    console.log('board died');
+  });
+};
+
+
+
 exports.createBoard = async (req, res) => {
   try {
     // const userId = req.userId;
@@ -21,8 +48,6 @@ exports.createBoard = async (req, res) => {
   }
 };
 
-
-// controllers/boardController.js
 exports.updateBoard = async (req, res) => {
   const { boardId } = req.params;
 
@@ -57,7 +82,6 @@ exports.updateBoard = async (req, res) => {
   }
 };
 
-// controllers/boardController.js
 exports.getBoardById = async (req, res) => {
   const { boardId } = req.params;
 

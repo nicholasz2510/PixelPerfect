@@ -1,22 +1,35 @@
+// require statements and imports
 const express = require('express');
-const mongoose = require('mongoose');
-const userRoutes = require('./routes/userRoutes');
-const boardRoutes = require('./routes/boardRoutes');
+const http = require('http');
+const socketIo = require('socket.io');
+const boardController = require('./controllers/boardController');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const server = http.createServer(app);
+const io = new Server(server);
 
-// Middleware
+
+// json
 app.use(express.json());
+app.use(express.static('public'));
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/testDb', { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error(err));
+io.on('connection', (socket) => {
+  // board connections
+  boardController.handleNewConnection(socket);
+  boardController.handlePixelUpdate(socket, io);
+  boardController.handleDisconnection(socket);
+});
 
-// Routes
-app.use('/api/users', userRoutes);
-app.use('/api/boards', boardRoutes);
+
+// // mongo
+// mongoose.connect('mongodb://localhost:27017/testDb', { useNewUrlParser: true, useUnifiedTopology: true })
+//   .then(() => console.log('MongoDB connected'))
+//   .catch(err => console.error(err));
+
+// // Routes
+// app.use('/api/users', userRoutes);
+// app.use('/api/boards', boardRoutes);
 
 // Start the server
 app.listen(PORT, () => {
