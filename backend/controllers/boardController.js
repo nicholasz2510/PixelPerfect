@@ -10,7 +10,7 @@ exports.handlePixelUpdate = (socket, io) => {
       const boardData = await Board.findById(boardId);
       const boardDataObj = boardData.toObject().board;
       boardDataObj[y][x] = color;
-     
+
       boardData.board = boardDataObj;
       console.log("NOOOO!");
 
@@ -42,7 +42,6 @@ exports.handleNewConnection = (socket) => {
           }
       });
 
-
       socket.join(boardId);
       socket.emit('gameBoard', boardFound.board, boardFound._id, boardFound.title);
       socket.emit('joinSuccess', "Connected to room  " + boardId);
@@ -68,7 +67,7 @@ exports.createBoard = async (req, res) => {
       }
     );
 
-    await newBoard.save(); 
+    await newBoard.save();
 
     res.status(201).json({ message: 'board created', boardId: newBoard._id });
   } catch (error) {
@@ -98,7 +97,7 @@ exports.updateBoard = async (req, res) => {
 
     await oldBoard.save();
 
-    res.status(200).json({ 
+    res.status(200).json({
       message: 'Board updated successfully',
       gridX: gridX,
       gridY: gridY,

@@ -68,7 +68,7 @@ body {
     cursor: pointer;
   }
 
-  #addBoardButtonWrapper {
+  .addBoardButtonWrapper {
     bottom: 20px;
     position: absolute;
     height: 50px;
@@ -78,7 +78,75 @@ body {
     align-items: center;
   }
 
-  #addBoardButton {
+  /* Style for the wrapper that holds both buttons */
+  #wrapper {
+    position: absolute;
+    bottom: 20px; /* Keep it 20px from the bottom of the screen */
+    left: 50%; /* Move it to the horizontal center of the sidebar */
+    transform: translateX(-50%); /* Center align the buttons horizontally */
+    display: flex; /* Make the buttons align next to each other */
+    gap: 30px; /* Space between the buttons */
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  #formWrapper {
+    position: absolute;
+    bottom: 80px; /* Adjust this to position the form right above the buttons */
+    left: 10px;
+    width: 260px; /* Same width as sidebar */
+    background-color: lightgray;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+
+  .boardForm {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #boardName {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #b0b0b0;
+    border-radius: 5px;
+  }
+
+  .boardForm button {
+    padding: 10px;
+    background-color: #eeeeee;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .boardForm button:hover {
+    background-color: yellowgreen;
+  }
+
+  /* Shared button style */
+  .addBoardButton {
+    background-color: #eeeeee;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: 16px;
+    flex: 1; /* Buttons will grow equally and stay next to each other */
+  }
+
+  /* Hover effect */
+  .addBoardButton:hover {
+    background-color: #dddddd;
+  }
+
+
+  .addBoardButton {
+    display: block;
     background-color: #eeeeee;
     border: none;
     padding: 10px;
@@ -88,7 +156,14 @@ body {
     font-size: 20px;
   }
 
-  #addBoardButton:hover {
+  #create {
+    padding: 10px;
+    gap: 10px;
+    bottom: 30px;
+    left: 10px;
+  }
+
+  .addBoardButton:hover {
     background-color: #dddddd;
   }
 
