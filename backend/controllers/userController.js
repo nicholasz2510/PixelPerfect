@@ -83,7 +83,6 @@ exports.authUser = async (req, res) => {
     
   
     res.status(201).json({
-      message : "User created successfully.",
       rooms : user.rooms,
       pixels : user.pixels
     });
