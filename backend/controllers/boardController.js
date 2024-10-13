@@ -13,38 +13,47 @@ exports.createBoard = async (req, res) => {
 
     const newBoard = new Board();
 
-    await newBoard.save(); // Save to MongoDB
+    await newBoard.save(); 
 
-    // Return the board ID to the client
-    res.status(201).json({ message: 'Board created successfully', boardId: newBoard._id });
+    res.status(201).json({ message: 'board created', boardId: newBoard._id });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to create board: error ' + error });
+    res.status(500).json({ error: 'cooked board error ' + error });
   }
 };
 
 
 // controllers/boardController.js
 exports.updateBoard = async (req, res) => {
-  console.log(req.body);
   const { boardId } = req.params;
-  const { board } = req.body; // The new state of the board (e.g., updated 2D array)
 
-  console.log(board);
+  const gridX = req.body.gridX;
+  const gridY = req.body.gridY;
+  const color = req.body.color;
+
+  // const { board } = req.body; // The new state of the board (e.g., updated 2D array)
+
 
   try {
-    const updatedBoard = await Board.findByIdAndUpdate(
-      boardId,          // Find the board by ID
-      { board },        // Update the board array with the new state
-      { new: true }     // Return the updated document
-    );
 
-    if (!updatedBoard) {
-      return res.status(404).json({ message: 'Board not found' });
+    const oldBoard = await Board.findById(boardId);
+
+    if(!oldBoard) {
+      return res.status(404).json({message: 'Board not found'});
     }
 
-    res.status(200).json({ message: 'Board updated successfully', board: updatedBoard });
+    oldBoard.board[gridY][gridX] = color;
+
+    await oldBoard.save();
+
+    res.status(200).json({ 
+      message: 'Board updated successfully',
+      gridX: gridX,
+      gridY: gridY,
+      color: color
+
+     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update board' });
+    res.status(500).json({ error: 'Failed to update board because of ' + error });
   }
 };
 
