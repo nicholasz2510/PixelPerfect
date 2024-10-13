@@ -39,9 +39,10 @@
             try {
                 // Initialize the Auth0 client
                 auth0Client = await createAuth0Client({
-                    domain: "https://dev-c64uddi44r8sy6bb.us.auth0.com",       // Replace with your Auth0 domain
-                    client_id: "ZUotY0AroKpXCdQjvoanrCsfL8aXJfYz", // Replace with your Auth0 client ID
-                    redirect_uri: window.location.origin + "/board.html"  // Redirect to board.html after login
+                    domain: "dev-c64uddi44r8sy6bb.us.auth0.com",       // Replace with your Auth0 domain
+                    client_id: "lQsAe1JJ9anKD9oFtjrItojIboqI31B0", // Replace with your Auth0 client ID
+                    redirect_uri: window.location.origin + "/board.html",  // Redirect to board.html after login
+                    cacheLocation: 'localstorage'  // Persist session across page reloads
                 });
 
                 // Check if the user is already authenticated

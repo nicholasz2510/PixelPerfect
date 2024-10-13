@@ -23,6 +23,67 @@ canvas.height = height;
 const GRID_SIZE = 100;
 const BASE_PIXEL_SIZE = Math.min(width, height) / GRID_SIZE; // Base pixel size without scaling
 
+let auth0Client;
+
+async function configureAuth0() {
+    try {
+        // Re-initialize the Auth0 client
+        auth0Client = await createAuth0Client({
+            domain: "dev-c64uddi44r8sy6bb.us.auth0.com",  // Replace with your Auth0 domain
+            client_id: "lQsAe1JJ9anKD9oFtjrItojIboqI31B0",  // Replace with your Auth0 client ID
+            redirect_uri: window.location.origin + "/board.html",  // Callback URL
+            cacheLocation: 'localstorage'  // Ensure session persists across page reloads
+        });
+
+        // Handle the redirect callback and authenticate the user
+        await handleAuthentication();
+    } catch (error) {
+        console.error("Error configuring Auth0:", error);
+    }
+}
+
+async function handleAuthentication() {
+    try {
+        // Handle the redirect from Auth0 (if there are tokens in the URL)
+        const queryParams = window.location.search;
+        if (queryParams.includes("code=") && queryParams.includes("state=")) {
+            console.log("Handling redirect callback...");
+            await auth0Client.handleRedirectCallback();  // Process login and tokens
+            window.history.replaceState({}, document.title, window.location.pathname);  // Clean URL
+        }
+
+        // Check if the user is authenticated
+        const isAuthenticated = await auth0Client.isAuthenticated();
+        console.log("Is user authenticated?", isAuthenticated);
+
+        if (isAuthenticated) {
+            // Fetch and display the user's profile
+            const user = await auth0Client.getUser();
+            console.log('User profile:', user);
+            
+            const formData = new FormData();
+            formData.append('_id', user.sub);
+            // Use fetch to send a POST request
+              fetch('/users/auth', {
+                  method: 'POST',
+                  body: formData,
+              })
+
+        } else {
+            console.log("User is not authenticated, redirecting to login...");
+            // Redirect to the login page if the user is not authenticated
+            window.location.href = "/index.html";
+        }
+    } catch (error) {
+        console.error("Error during authentication:", error);
+        // dfidsfs();
+        window.location.href = '/index.html';  // Redirect to login if there's an error
+    }
+}
+
+// Initialize Auth0 and handle the session on page load
+window.onload = configureAuth0;
+
 // // Initialize pixel grid with white color
 let pixels = [];
 for (let y = 0; y < GRID_SIZE; y++) {
